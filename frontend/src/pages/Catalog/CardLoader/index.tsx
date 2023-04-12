@@ -1,12 +1,12 @@
 import ContentLoader from 'react-content-loader';
 
-const CardLoarder = () => (
-  <div className='card-loarder-container'>
+const CardLoader = () => (
+  <div className="card-loader-container">
     <ContentLoader
       speed={2}
-      width={300}
-      height={300}
-      viewBox="0 0 300 300"
+      width={320}
+      height={460}
+      viewBox="0 0 320 460"
       backgroundColor="#ecebeb"
       foregroundColor="#d6d2d2"
     >
@@ -15,4 +15,4 @@ const CardLoarder = () => (
   </div>
 );
 
-export default CardLoarder;
+export default CardLoader;

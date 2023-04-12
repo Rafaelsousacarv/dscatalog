@@ -1,13 +1,14 @@
 import { ReactComponent as ArrowIcon } from 'assets/images/arrow.svg';
+import axios from 'axios';
 import ProductPrice from 'components/ProductPrice';
 import { useState, useEffect } from 'react';
-import './styles.css';
 import { Link, useParams } from 'react-router-dom';
 import { Product } from 'types/product';
-import axios from 'axios';
 import { BASE_URL } from 'util/requests';
-import ProductInfoLoarder from './ProductInforLoader/Index';
-import ProductDetalisLoader from './ProductDetailsLoarder';
+import ProductInfoLoader from './ProductInfoLoader';
+import ProductDetailsLoader from './ProductDetailsLoader';
+
+import './styles.css';
 
 type UrlParams = {
   productId: string;
@@ -15,6 +16,7 @@ type UrlParams = {
 
 const ProductDetails = () => {
   const { productId } = useParams<UrlParams>();
+
   const [isLoading, setIsLoading] = useState(false);
   const [product, setProduct] = useState<Product>();
 
@@ -30,16 +32,6 @@ const ProductDetails = () => {
       });
   }, [productId]);
 
-  /*
-  // FORMA INCORRETA
-  let product : Product;
-
-  // FORMA INCORRETA
-  axios.get(BASE_URL + "/products/2")
-    .then(response => {
-        console.log(response.data)
-    });
-*/
   return (
     <div className="product-details-container">
       <div className="base-card product-details-card">
@@ -49,10 +41,10 @@ const ProductDetails = () => {
             <h2>VOLTAR</h2>
           </div>
         </Link>
-        <div className="row ">
+        <div className="row">
           <div className="col-xl-6">
             {isLoading ? (
-              <ProductInfoLoarder />
+              <ProductInfoLoader />
             ) : (
               <>
                 <div className="img-container">
@@ -67,10 +59,10 @@ const ProductDetails = () => {
           </div>
           <div className="col-xl-6">
             {isLoading ? (
-              <ProductDetalisLoader />
+              <ProductDetailsLoader />
             ) : (
               <div className="description-container">
-                <h2>Descrição do Produto</h2>
+                <h2>Descrição do produto</h2>
                 <p>{product?.description}</p>
               </div>
             )}

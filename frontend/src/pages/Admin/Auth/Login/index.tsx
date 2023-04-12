@@ -1,35 +1,50 @@
-import './styles.css';
-
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import ButtonIcon from 'components/ButtonIcon';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
-import { getAuthData, requestBackendLogin, saveAuthData } from 'util/requests';
+import { requestBackendLogin } from 'util/requests';
+import { useContext, useState } from 'react';
+import { AuthContext } from 'AuthContext';
+import { saveAuthData } from 'util/storage';
+import { getTokenData } from 'util/auth';
+
+import './styles.css';
 
 type FormData = {
   username: string;
   password: string;
 };
 
+type LocationState = {
+  from: string;
+}
+
 const Login = () => {
-  const [hasError, setHarError] = useState(false);
 
-  const { register, handleSubmit, formState: {errors}  } = useForm<FormData>();
+  const location = useLocation<LocationState>();
 
-  const  history = useHistory();
-  
+  const { from } = location.state || { from: { pathname: '/admin' } };
+
+  const { setAuthContextData } = useContext(AuthContext);
+
+  const [hasError, setHasError] = useState(false);
+
+  const { register, handleSubmit, formState: {errors} } = useForm<FormData>();
+
+  const history = useHistory();
+
   const onSubmit = (formData: FormData) => {
     requestBackendLogin(formData)
       .then((response) => {
         saveAuthData(response.data);
-        const token = getAuthData().access_token;
-        console.log('Token Gerado:' + token);
-        setHarError(false);
-        console.log('SUCESSO', response);
-        history.push('/admin');
+        setHasError(false);
+        setAuthContextData({
+          authenticated: true,
+          tokenData: getTokenData(),
+        })
+        history.replace(from);
       })
       .catch((error) => {
-        setHarError(true);
+        setHasError(true);
         console.log('ERRO', error);
       });
   };
@@ -38,9 +53,7 @@ const Login = () => {
     <div className="base-card login-card">
       <h1>LOGIN</h1>
       {hasError && (
-        <div className="alert alert-danger">
-          Ocorreu ao tentar efetuar login.
-        </div>
+        <div className="alert alert-danger">Erro ao tentar efetuar o login</div>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
@@ -57,7 +70,7 @@ const Login = () => {
             placeholder="Email"
             name="username"
           />
-          <div className='invalid-feedback d-block'>{errors.username?.message}</div>
+          <div className="invalid-feedback d-block">{errors.username?.message}</div>
         </div>
         <div className="mb-2">
           <input
@@ -69,7 +82,7 @@ const Login = () => {
             placeholder="Password"
             name="password"
           />
-          <div className='invalid-feedback d-block'>{errors.password?.message}</div>
+          <div className="invalid-feedback d-block">{errors.password?.message}</div>
         </div>
         <Link to="/admin/auth/recover" className="login-link-recover">
           Esqueci a senha
