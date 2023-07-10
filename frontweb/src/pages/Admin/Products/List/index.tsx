@@ -1,7 +1,7 @@
-import ProductCard from 'components/ProductCard';
+import { Link } from 'react-router-dom';
+import ProductCrudCard from '../ProductCrudCard';
 
 import './styles.css';
-import { Link } from 'react-router-dom';
 
 const List = () => {
   const product = {
@@ -14,6 +14,10 @@ const List = () => {
       'https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg',
     date: '2020-07-13T20:50:07.123450Z',
     categories: [
+      {
+        id: 1,
+        name: 'Computadores',
+      },
       {
         id: 2,
         name: 'Eletrônicos',
@@ -33,13 +37,13 @@ const List = () => {
       </div>
       <div className="row">
         <div className="col-sm-6 col-md-12">
-          <ProductCard product={product} />
+          <ProductCrudCard product={product} />
         </div>
         <div className="col-sm-6 col-md-12">
-          <ProductCard product={product} />
+          <ProductCrudCard product={product} />
         </div>
         <div className="col-sm-6 col-md-12">
-          <ProductCard product={product} />
+          <ProductCrudCard product={product} />
         </div>
       </div>
     </>
